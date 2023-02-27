@@ -1,0 +1,79 @@
+---
+title: "Julie & Pete's DS 613 HW 4"
+author: "Pete Magee"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, message=FALSE}
+library(tidyverse)
+library(purrr)
+```
+
+# #1a
+```{r}
+iris %>%
+  nrow()
+```
+
+# #1b
+```{r}
+iris %>%
+  map_dbl(n_distinct)
+```
+
+# #2
+```{r}
+matrix1 <- matrix(nrow = 3, ncol = 5)
+for (i in 1:nrow(matrix1))
+{
+  for (j in 1:ncol(matrix1))
+  {
+    matrix1[i, j] <- j - i
+  }
+}
+print(matrix1)
+```
+
+# #3
+```{r}
+tribble(
+  ~mean, ~n,
+  -10, 10,
+  0, 10,
+  -10, 10,
+  100, 10
+) -> parameters
+
+pmap(parameters, rnorm)
+pmap(parameters, rnorm)
+```
+
+# #4a
+```{r}
+# Check this
+X <- list(12, 14, 15, 18, 19, 22, 10, 18, 18)
+Mean <- list(16, 16, 16, 16, 16, 16, 16, 16, 16)
+sd <- list(2, 2, 2, 2, 2, 2, 2, 2, 2)
+
+z_score <- pmap_dbl(list(X, Mean, sd), function(X, Mean, sd) ((X - Mean) / sd))
+z_score
+pop_mean <- pmap_dbl(list(X, Mean, sd), function(X, Mean, sd) ((X - Mean) / sd) / sqrt(9))
+pop_mean
+```
+
+# #5
+```{r}
+V <- c(10, 15, 17, 22, 32, 38, 42)
+V %>%
+  keep(V < 20)
+V %>%
+  discard(V < 20)
+```
+# #6
+```{r}
+U <- list(10, 15, "mary", 22, 32, "james", 42)
+map(U, safely(~ .x + 15))
+```
+
+The output for this function indicates the whether each value of the list was able to be pass through the computation. It indicates the result of the computation if the value is numeric, otherwise it indicates the error as NULL. If it was not possible to compute, the output indicates that there was an error in computing, and points out the error. In this case, the error was that both values were non-numeric.
